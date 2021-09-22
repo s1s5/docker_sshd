@@ -7,6 +7,11 @@ RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 
+# https://superuser.com/questions/588591/how-to-make-an-ssh-tunnel-publicly-accessible
+# ssh -R 0.0.0.0:8080:localhost:80 -N root@example.com
+# if you use OpenSSH sshd server, the server's GatewayPorts option needs to be enabled
+RUN sed -i 's/#GatewayPorts no/GatewayPorts yes/' /etc/ssh/sshd_config
+
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
